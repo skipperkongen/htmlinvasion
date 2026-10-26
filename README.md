@@ -1,5 +1,7 @@
 # HTML Invasion
 
+**Live demo:** <https://skipperkongen.github.io/htmlinvasion/> · <https://skipperkongen.dk/demos/htmlinvasion/>
+
 An ASCII art attack helicopter that flies over a web page, radios in each target, and shoots the
 page's elements away one at a time, to the tune of Ride of the Valkyries.
 
