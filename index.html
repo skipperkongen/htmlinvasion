@@ -5,22 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>HTML Invasion</title>
 <style>
-	:root {
-		--bg: #f4f1e8;
-		--ink: #1d2a12;
-		--muted: #5b6250;
-		--olive: #4b5d2a;
-		--red: #c1121f;
-		--card: #fffdf6;
-		--line: #d8d2bf;
-	}
-	* { box-sizing: border-box; }
 	body {
 		margin: 0;
-		background: var(--bg);
-		color: var(--ink);
-		font: 16px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif;
+		background: #c0c0c0;
+		color: #000;
+		font-family: "Times New Roman", Times, serif;
 	}
+	a { color: #0000ee; }
+	a:visited { color: #551a8b; }
 	.bar {
 		position: sticky;
 		top: 0;
@@ -28,130 +20,114 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		gap: 12px;
-		padding: 10px 16px;
-		background: var(--ink);
+		gap: 8px;
+		padding: 4px 8px;
+		background: #000080;
 		color: #fff;
+		font: bold 14px "MS Sans Serif", Tahoma, Geneva, sans-serif;
+		border-bottom: 2px solid #000;
 	}
-	.bar strong { letter-spacing: .08em; }
-	.launch {
-		padding: 10px 18px;
-		border: 2px solid #fff;
-		border-radius: 6px;
-		background: var(--red);
-		color: #fff;
-		font: bold 15px/1.2 system-ui, sans-serif;
+	.bevel {
+		padding: 4px 12px;
+		background: #c0c0c0;
+		color: #000;
+		font: bold 13px "MS Sans Serif", Tahoma, Geneva, sans-serif;
+		border: 2px outset #fff;
 		cursor: pointer;
 	}
-	.launch.flying { background: var(--olive); }
-	main { max-width: 880px; margin: 0 auto; padding: 0 16px 64px; }
-	header.hero { padding: 48px 0 24px; }
-	header.hero h1 { font-size: clamp(2rem, 6vw, 3.25rem); line-height: 1.1; margin: 0 0 12px; }
-	header.hero p { font-size: 1.15rem; color: var(--muted); max-width: 40em; }
-	nav ul { display: flex; flex-wrap: wrap; gap: 8px 20px; list-style: none; padding: 0; margin: 0 0 8px; }
-	nav a { color: var(--olive); font-weight: 600; }
-	.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin: 24px 0; }
-	.card { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 16px; }
-	.card h3 { margin: 0 0 6px; }
-	.card p { margin: 0; color: var(--muted); }
-	.badge { display: inline-block; padding: 2px 10px; border-radius: 999px; background: var(--olive); color: #fff; font-size: .8rem; margin: 0 4px 4px 0; }
-	.photo { display: block; width: 100%; height: auto; border-radius: 8px; }
-	blockquote { margin: 24px 0; padding: 12px 20px; border-left: 4px solid var(--red); background: var(--card); font-style: italic; }
-	table { width: 100%; border-collapse: collapse; margin: 16px 0; }
-	th, td { text-align: left; padding: 8px; border-bottom: 1px solid var(--line); }
-	.bunker {
-		margin-top: 48px;
-		padding: 24px;
-		border: 3px dashed var(--olive);
-		border-radius: 10px;
-		background: var(--card);
-	}
-	.bunker h2 { margin-top: 0; }
-	.bookmarklet {
-		display: inline-block;
-		padding: 10px 18px;
-		border-radius: 6px;
-		background: var(--olive);
-		color: #fff;
-		font-weight: bold;
-		text-decoration: none;
-		cursor: grab;
-	}
-	.field { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 12px 0; }
-	.field input { flex: 1 1 280px; min-width: 0; padding: 8px; font: 14px monospace; border: 1px solid var(--line); border-radius: 4px; }
-	.warning { padding: 10px 14px; border-radius: 6px; background: #fde8e8; color: #7a0b12; }
-	code { background: #ebe6d6; padding: 1px 5px; border-radius: 3px; }
-	ol li { margin-bottom: 8px; }
-	footer { margin-top: 32px; color: var(--muted); font-size: .9rem; }
+	.bevel:active { border-style: inset; }
+	a.bevel { display: inline-block; text-decoration: none; cursor: grab; }
+	.page { max-width: 960px; margin: 0 auto; padding: 4px 16px 40px; }
+	h1 { font-size: 28px; margin: 6px 0 2px; }
+	h2 { font-size: 19px; margin: 10px 0 4px; }
+	p, ul { margin: 6px 0; }
+	.columns { display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px; }
+	@media (max-width: 720px) { .columns { grid-template-columns: 1fr; } }
+	.box { background: #fff; border: 2px inset #fff; padding: 8px 12px; }
+	pre.ascii { margin: 0; font-size: 12px; line-height: 1.15; overflow-x: auto; }
+	.blink { color: #ff0000; font-weight: bold; animation: blink 1s steps(1) infinite; }
+	@keyframes blink { 50% { visibility: hidden; } }
+	@media (prefers-reduced-motion: reduce) { .blink { animation: none; } }
+	table.old { border-collapse: separate; width: 100%; background: #fff; }
+	table.old th { background: #000080; color: #fff; }
+	.counter { display: inline-block; background: #000; color: #0f0; font: bold 16px "Courier New", monospace; padding: 1px 4px; letter-spacing: 2px; }
+	.bunker { background: #ffffcc; border: 3px ridge #808080; padding: 12px; }
+	.bunker input { width: 100%; box-sizing: border-box; font: 13px "Courier New", monospace; }
+	.warning { background: #ffcccc; border: 1px solid #ff0000; padding: 6px; }
+	marquee { display: block; margin-top: 6px; background: #ffff00; border: 1px solid #000; padding: 2px; font-weight: bold; }
 </style>
 </head>
 <body>
 
 <div class="bar invasion-ignore">
-	<strong>HTML INVASION</strong>
-	<button type="button" class="launch" id="launch">&#x1F681; Launch Attack Helicopter</button>
+	<span>HTML INVASION</span>
+	<button type="button" class="bevel" id="launch">Launch Attack Helicopter</button>
 </div>
 
-<main>
-	<header class="hero">
-		<nav>
-			<ul>
-				<li><a href="#about">About</a></li>
-				<li><a href="#products">Products</a></li>
-				<li><a href="#prices">Prices</a></li>
-				<li><a href="#bunker">Bookmarklet</a></li>
-			</ul>
-		</nav>
-		<h1>Acme Peaceful Widgets Inc.</h1>
-		<p>A perfectly ordinary homepage with headings, paragraphs, pictures and tables. Press
-			<em>Launch Attack Helicopter</em> to send an ASCII art gunship after every element on it.</p>
-		<span class="badge">Established 1987</span>
-		<span class="badge">Family owned</span>
-		<span class="badge">Mostly harmless</span>
-	</header>
+<div class="page">
 
-	<section id="about">
-		<h2>About us</h2>
-		<p>We have been making widgets for over three decades. Our widgets are hand-assembled by
-			skilled craftspeople and tested to survive almost anything.</p>
-		<svg class="photo" viewBox="0 0 800 220" role="img" aria-label="Factory illustration">
-			<rect width="800" height="220" fill="#d8d2bf"/>
-			<rect x="60" y="90" width="260" height="130" fill="#4b5d2a"/>
-			<rect x="340" y="60" width="180" height="160" fill="#5b6250"/>
-			<rect x="380" y="10" width="30" height="60" fill="#1d2a12"/>
-			<rect x="540" y="120" width="200" height="100" fill="#4b5d2a"/>
-			<circle cx="700" cy="50" r="28" fill="#f2c14e"/>
-		</svg>
-		<blockquote>"The widgets are fine. I don't know what else you want me to say." &mdash; A customer</blockquote>
-	</section>
+	<!-- everything the helicopter can shoot fits on one screen, so it never has to scroll -->
+	<center>
+		<h1><font color="#000080">~*~ Welcome to Acme Peaceful Widgets Inc. ~*~</font></h1>
+		<font size="2">[ <a href="#about">About</a> | <a href="#products">Products</a> | <a href="#prices">Prices</a> |
+			<a href="#guestbook">Guestbook</a> | <a href="#bunker">Bookmarklet</a> ]</font>
+	</center>
 
-	<section id="products">
-		<h2>Products</h2>
-		<div class="grid">
-			<div class="card"><h3>Widget Classic</h3><p>The original. Round, dependable, beige.</p></div>
-			<div class="card"><h3>Widget Pro</h3><p>Like Classic, but with a second button.</p></div>
-			<div class="card"><h3>Widget Mini</h3><p>Fits in a pocket. Loses itself in pockets.</p></div>
-			<div class="card"><h3>Widget Max</h3><p>Industrial scale. Requires a forklift.</p></div>
+	<marquee scrollamount="4">*** Press LAUNCH ATTACK HELICOPTER at the top of the page and watch this homepage get destroyed! ***</marquee>
+
+	<div class="columns">
+		<div>
+			<p>You are visitor number <span class="counter">0019387</span><br>
+				since Feb 6, 2011. <span class="blink">NEW!</span> Now with widgets.</p>
+
+			<h2 id="about"><font face="Arial, Helvetica, sans-serif">About Us</font></h2>
+			<p>We have made widgets for over three decades, hand-assembled by skilled craftspeople and tested
+				to survive almost anything.</p>
+			<div class="box">
+				<pre class="ascii">
+   _____________        _______
+  | ACME WIDGETS |     |  W  W |
+  |  _   _   _   | ~~  |  W  W |
+  | |_| |_| |_|  |/  \ |_______|
+__|______________|_||_|___________</pre>
+			</div>
+			<p><i>"The widgets are fine. I don't know what else you want me to say." -- A customer</i></p>
+
+			<h2 id="guestbook"><font face="Arial, Helvetica, sans-serif">Guestbook</font></h2>
+			<p><b>Dave</b> wrote: Cool page!!! Check out my homepage too.<br>
+				<b>Webmaster</b> wrote: Thanks Dave. Please stop signing the guestbook.</p>
 		</div>
-	</section>
 
-	<section id="prices">
-		<h2>Prices</h2>
-		<table>
-			<thead><tr><th>Model</th><th>Price</th><th>Stock</th></tr></thead>
-			<tbody>
-				<tr><td>Classic</td><td>$19</td><td>Plenty</td></tr>
-				<tr><td>Pro</td><td>$49</td><td>Some</td></tr>
-				<tr><td>Mini</td><td>$9</td><td>Lost</td></tr>
-				<tr><td>Max</td><td>$4,900</td><td>One</td></tr>
-			</tbody>
-		</table>
-		<p>Prices include tax, shipping and emotional support.</p>
-	</section>
+		<div>
+			<h2 id="products"><font face="Arial, Helvetica, sans-serif">Our Products</font></h2>
+			<ul>
+				<li><b>Widget Classic</b> - Round, dependable, beige.</li>
+				<li><b>Widget Pro</b> - Now with a second button! <span class="blink">HOT!</span></li>
+				<li><b>Widget Mini</b> - Loses itself in pockets.</li>
+				<li><b>Widget Max</b> - Requires a forklift.</li>
+			</ul>
+
+			<h2 id="prices"><font face="Arial, Helvetica, sans-serif">Price List</font></h2>
+			<table class="old" border="1" cellpadding="2" cellspacing="2">
+				<tr><th>Model</th><th>Price</th><th>In stock</th></tr>
+				<tr><td>Classic</td><td>$19.99</td><td>Plenty</td></tr>
+				<tr><td>Pro</td><td>$49.99</td><td>Some</td></tr>
+				<tr><td>Mini</td><td>$9.99</td><td>Lost</td></tr>
+				<tr><td>Max</td><td>$4,999.99</td><td>One</td></tr>
+			</table>
+			<p><font size="2">Prices include tax, shipping and emotional support.
+				Please allow 6-8 weeks for delivery.</font></p>
+
+			<div class="box"><pre class="ascii">/!\ THIS SITE IS UNDER CONSTRUCTION /!\</pre></div>
+			<p><font size="2">Best viewed in Netscape Navigator 4.0 at 800x600.</font></p>
+		</div>
+	</div>
+
+	<hr size="3" noshade>
 
 	<!-- the bunker is marked invasion-ignore, so the instructions survive the attack -->
-	<section id="bunker" class="bunker invasion-ignore">
-		<h2>Unleash it on any page: the bookmarklet</h2>
+	<div id="bunker" class="bunker invasion-ignore">
+		<h2><font face="Arial, Helvetica, sans-serif">The Bunker: unleash it on ANY page with the bookmarklet</font></h2>
 		<p>This section is a bunker: it has the class <code>invasion-ignore</code>, so the helicopter leaves it alone.
 			Add that class to any element you want to protect.</p>
 
@@ -160,29 +136,27 @@
 			over http (for example <code>python3 -m http.server</code>, then open
 			<code>http://localhost:8000/</code>), or enter the public URL where you uploaded these files below.</p>
 
-		<div class="field">
-			<label for="base">Files hosted at:</label>
-			<input id="base" type="url" spellcheck="false">
-		</div>
+		<p><label for="base">Files hosted at:</label><br>
+			<input id="base" type="url" spellcheck="false"></p>
 
-		<p><a id="bookmarklet" class="bookmarklet" href="#">&#x1F681; Attack Helicopter</a></p>
+		<p><a id="bookmarklet" class="bevel" href="#">Attack Helicopter</a> &lt;-- drag me!</p>
 
 		<h3>Add the bookmarklet</h3>
 		<ol>
 			<li>Show your bookmarks bar: <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>B</kbd> (Windows/Linux) or
 				<kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>B</kbd> (Mac).</li>
-			<li>Drag the green <strong>Attack Helicopter</strong> button above onto the bookmarks bar.</li>
+			<li>Drag the <b>Attack Helicopter</b> button above onto the bookmarks bar.</li>
 			<li>Can't drag (e.g. on mobile)? Bookmark any page, edit the bookmark, and paste the code
-				from the box below as its URL. <button type="button" id="copy">Copy code</button></li>
+				from the box below as its URL. <button type="button" class="bevel" id="copy">Copy code</button></li>
 		</ol>
-		<div class="field"><input id="code" readonly aria-label="Bookmarklet code"></div>
+		<p><input id="code" readonly aria-label="Bookmarklet code"></p>
 
 		<h3>Use it</h3>
 		<ol>
-			<li>Open any website and click the <strong>Attack Helicopter</strong> bookmark.</li>
-			<li>A <strong>Launch Attack Helicopter</strong> button appears in the bottom right corner.</li>
+			<li>Open any website and click the <b>Attack Helicopter</b> bookmark.</li>
+			<li>A <b>Launch Attack Helicopter</b> button appears in the bottom right corner.</li>
 			<li>Click it, turn up the volume, and watch the page get destroyed one element at a time.
-				Click <strong>Abort mission</strong> to call it off. Reload the page to undo the damage.</li>
+				Click <b>Abort mission</b> to call it off. Reload the page to undo the damage.</li>
 		</ol>
 
 		<h3>Good to know</h3>
@@ -193,12 +167,17 @@
 				scripts. The bookmarklet tells you when that happens; there's nothing to do but pick another site.</li>
 			<li>Nothing is changed for real: everything happens in your browser tab only.</li>
 		</ul>
-	</section>
+	</div>
 
-	<footer>
-		<p>HTML Invasion by Pimin Konstantin Kefaloukos and Rasmus Frederiksen. Soundtrack: Ride of the Valkyries by Richard Wagner.</p>
-	</footer>
-</main>
+	<!-- protected too, so the helicopter never scrolls down past the bunker -->
+	<center class="invasion-ignore">
+		<hr size="3" noshade>
+		<p><font size="2">HTML Invasion by Pimin Konstantin Kefaloukos and Rasmus Frederiksen.
+			Soundtrack: Ride of the Valkyries by Richard Wagner.</font></p>
+		<p><font size="2">&copy; 2011 | <a href="https://github.com/skipperkongen/htmlinvasion">Source code</a></font></p>
+	</center>
+
+</div>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="attackhelicopter.js"></script>
@@ -209,7 +188,6 @@
 	launch.addEventListener("click", function () {
 		var flying = invasion.toggle();
 		launch.innerHTML = flying ? "Abort mission" : launchText;
-		launch.classList.toggle("flying", flying);
 	});
 
 	// runs on the visited page when the bookmark is clicked; base is where the files are hosted

@@ -252,7 +252,11 @@ var invasion = (function ($) {
 			var gunOffsetY = self.container.outerHeight() * 0.75;
 			var left = Math.max(0, rect.left - gap - gunOffsetX);
 			var top = Math.max(0, rect.top + Math.min(rect.height, 200) / 2 - gunOffsetY);
-			window.scrollTo({top: Math.max(0, top - window.innerHeight / 3), behavior: "smooth"});
+			// only scroll when the target isn't already on screen
+			var scrollTop = $(window).scrollTop();
+			if(rect.top < scrollTop || rect.top + rect.height > scrollTop + window.innerHeight) {
+				window.scrollTo({top: Math.max(0, top - window.innerHeight / 3), behavior: "smooth"});
+			}
 			self.moveTo("left", left, function() {
 				self.moveTo("top", top, function() {
 					// 3: Radio target to base
