@@ -14,8 +14,7 @@ page's elements away one at a time, to the tune of Ride of the Valkyries.
                 __/__\___
 ```
 
-Made by Pimin Konstantin Kefaloukos and Rasmus Frederiksen. Originally written in 2011, brought back to
-life in 2026.
+Made by Pimin Konstantin Kefaloukos and Rasmus Frederiksen. Originally written in 2007, brought back to life in 2026.
 
 ## Try the demo
 
