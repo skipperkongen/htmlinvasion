@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HTML Invasion</title>
+<style>
+	:root {
+		--bg: #f4f1e8;
+		--ink: #1d2a12;
+		--muted: #5b6250;
+		--olive: #4b5d2a;
+		--red: #c1121f;
+		--card: #fffdf6;
+		--line: #d8d2bf;
+	}
+	* { box-sizing: border-box; }
+	body {
+		margin: 0;
+		background: var(--bg);
+		color: var(--ink);
+		font: 16px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif;
+	}
+	.bar {
+		position: sticky;
+		top: 0;
+		z-index: 10;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+		padding: 10px 16px;
+		background: var(--ink);
+		color: #fff;
+	}
+	.bar strong { letter-spacing: .08em; }
+	.launch {
+		padding: 10px 18px;
+		border: 2px solid #fff;
+		border-radius: 6px;
+		background: var(--red);
+		color: #fff;
+		font: bold 15px/1.2 system-ui, sans-serif;
+		cursor: pointer;
+	}
+	.launch.flying { background: var(--olive); }
+	main { max-width: 880px; margin: 0 auto; padding: 0 16px 64px; }
+	header.hero { padding: 48px 0 24px; }
+	header.hero h1 { font-size: clamp(2rem, 6vw, 3.25rem); line-height: 1.1; margin: 0 0 12px; }
+	header.hero p { font-size: 1.15rem; color: var(--muted); max-width: 40em; }
+	nav ul { display: flex; flex-wrap: wrap; gap: 8px 20px; list-style: none; padding: 0; margin: 0 0 8px; }
+	nav a { color: var(--olive); font-weight: 600; }
+	.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin: 24px 0; }
+	.card { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 16px; }
+	.card h3 { margin: 0 0 6px; }
+	.card p { margin: 0; color: var(--muted); }
+	.badge { display: inline-block; padding: 2px 10px; border-radius: 999px; background: var(--olive); color: #fff; font-size: .8rem; margin: 0 4px 4px 0; }
+	.photo { display: block; width: 100%; height: auto; border-radius: 8px; }
+	blockquote { margin: 24px 0; padding: 12px 20px; border-left: 4px solid var(--red); background: var(--card); font-style: italic; }
+	table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+	th, td { text-align: left; padding: 8px; border-bottom: 1px solid var(--line); }
+	.bunker {
+		margin-top: 48px;
+		padding: 24px;
+		border: 3px dashed var(--olive);
+		border-radius: 10px;
+		background: var(--card);
+	}
+	.bunker h2 { margin-top: 0; }
+	.bookmarklet {
+		display: inline-block;
+		padding: 10px 18px;
+		border-radius: 6px;
+		background: var(--olive);
+		color: #fff;
+		font-weight: bold;
+		text-decoration: none;
+		cursor: grab;
+	}
+	.field { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 12px 0; }
+	.field input { flex: 1 1 280px; min-width: 0; padding: 8px; font: 14px monospace; border: 1px solid var(--line); border-radius: 4px; }
+	.warning { padding: 10px 14px; border-radius: 6px; background: #fde8e8; color: #7a0b12; }
+	code { background: #ebe6d6; padding: 1px 5px; border-radius: 3px; }
+	ol li { margin-bottom: 8px; }
+	footer { margin-top: 32px; color: var(--muted); font-size: .9rem; }
+</style>
+</head>
+<body>
+
+<div class="bar invasion-ignore">
+	<strong>HTML INVASION</strong>
+	<button type="button" class="launch" id="launch">&#x1F681; Launch Attack Helicopter</button>
+</div>
+
+<main>
+	<header class="hero">
+		<nav>
+			<ul>
+				<li><a href="#about">About</a></li>
+				<li><a href="#products">Products</a></li>
+				<li><a href="#prices">Prices</a></li>
+				<li><a href="#bunker">Bookmarklet</a></li>
+			</ul>
+		</nav>
+		<h1>Acme Peaceful Widgets Inc.</h1>
+		<p>A perfectly ordinary homepage with headings, paragraphs, pictures and tables. Press
+			<em>Launch Attack Helicopter</em> to send an ASCII art gunship after every element on it.</p>
+		<span class="badge">Established 1987</span>
+		<span class="badge">Family owned</span>
+		<span class="badge">Mostly harmless</span>
+	</header>
+
+	<section id="about">
+		<h2>About us</h2>
+		<p>We have been making widgets for over three decades. Our widgets are hand-assembled by
+			skilled craftspeople and tested to survive almost anything.</p>
+		<svg class="photo" viewBox="0 0 800 220" role="img" aria-label="Factory illustration">
+			<rect width="800" height="220" fill="#d8d2bf"/>
+			<rect x="60" y="90" width="260" height="130" fill="#4b5d2a"/>
+			<rect x="340" y="60" width="180" height="160" fill="#5b6250"/>
+			<rect x="380" y="10" width="30" height="60" fill="#1d2a12"/>
+			<rect x="540" y="120" width="200" height="100" fill="#4b5d2a"/>
+			<circle cx="700" cy="50" r="28" fill="#f2c14e"/>
+		</svg>
+		<blockquote>"The widgets are fine. I don't know what else you want me to say." &mdash; A customer</blockquote>
+	</section>
+
+	<section id="products">
+		<h2>Products</h2>
+		<div class="grid">
+			<div class="card"><h3>Widget Classic</h3><p>The original. Round, dependable, beige.</p></div>
+			<div class="card"><h3>Widget Pro</h3><p>Like Classic, but with a second button.</p></div>
+			<div class="card"><h3>Widget Mini</h3><p>Fits in a pocket. Loses itself in pockets.</p></div>
+			<div class="card"><h3>Widget Max</h3><p>Industrial scale. Requires a forklift.</p></div>
+		</div>
+	</section>
+
+	<section id="prices">
+		<h2>Prices</h2>
+		<table>
+			<thead><tr><th>Model</th><th>Price</th><th>Stock</th></tr></thead>
+			<tbody>
+				<tr><td>Classic</td><td>$19</td><td>Plenty</td></tr>
+				<tr><td>Pro</td><td>$49</td><td>Some</td></tr>
+				<tr><td>Mini</td><td>$9</td><td>Lost</td></tr>
+				<tr><td>Max</td><td>$4,900</td><td>One</td></tr>
+			</tbody>
+		</table>
+		<p>Prices include tax, shipping and emotional support.</p>
+	</section>
+
+	<!-- the bunker is marked invasion-ignore, so the instructions survive the attack -->
+	<section id="bunker" class="bunker invasion-ignore">
+		<h2>Unleash it on any page: the bookmarklet</h2>
+		<p>This section is a bunker: it has the class <code>invasion-ignore</code>, so the helicopter leaves it alone.
+			Add that class to any element you want to protect.</p>
+
+		<p id="file-warning" class="warning" hidden>You opened this page as a local file. The demo above works,
+			but a bookmarklet that points at <code>file://</code> won't load on other websites. Serve this folder
+			over http (for example <code>python3 -m http.server</code>, then open
+			<code>http://localhost:8000/</code>), or enter the public URL where you uploaded these files below.</p>
+
+		<div class="field">
+			<label for="base">Files hosted at:</label>
+			<input id="base" type="url" spellcheck="false">
+		</div>
+
+		<p><a id="bookmarklet" class="bookmarklet" href="#">&#x1F681; Attack Helicopter</a></p>
+
+		<h3>Add the bookmarklet</h3>
+		<ol>
+			<li>Show your bookmarks bar: <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>B</kbd> (Windows/Linux) or
+				<kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>B</kbd> (Mac).</li>
+			<li>Drag the green <strong>Attack Helicopter</strong> button above onto the bookmarks bar.</li>
+			<li>Can't drag (e.g. on mobile)? Bookmark any page, edit the bookmark, and paste the code
+				from the box below as its URL. <button type="button" id="copy">Copy code</button></li>
+		</ol>
+		<div class="field"><input id="code" readonly aria-label="Bookmarklet code"></div>
+
+		<h3>Use it</h3>
+		<ol>
+			<li>Open any website and click the <strong>Attack Helicopter</strong> bookmark.</li>
+			<li>A <strong>Launch Attack Helicopter</strong> button appears in the bottom right corner.</li>
+			<li>Click it, turn up the volume, and watch the page get destroyed one element at a time.
+				Click <strong>Abort mission</strong> to call it off. Reload the page to undo the damage.</li>
+		</ol>
+
+		<h3>Good to know</h3>
+		<ul>
+			<li>The bookmarklet loads <code>attackhelicopter.js</code> and the mp3 files from the URL above, plus
+				jQuery from <code>code.jquery.com</code>, without touching the page's own jQuery.</li>
+			<li>Some sites (GitHub, banks, many big web apps) have a Content Security Policy that blocks outside
+				scripts. The bookmarklet tells you when that happens; there's nothing to do but pick another site.</li>
+			<li>Nothing is changed for real: everything happens in your browser tab only.</li>
+		</ul>
+	</section>
+
+	<footer>
+		<p>HTML Invasion by Pimin Konstantin Kefaloukos and Rasmus Frederiksen. Soundtrack: Ride of the Valkyries by Richard Wagner.</p>
+	</footer>
+</main>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="attackhelicopter.js"></script>
+<script>
+	// demo page launch button
+	var launch = document.getElementById("launch");
+	var launchText = launch.innerHTML;
+	launch.addEventListener("click", function () {
+		var flying = invasion.toggle();
+		launch.innerHTML = flying ? "Abort mission" : launchText;
+		launch.classList.toggle("flying", flying);
+	});
+
+	// runs on the visited page when the bookmark is clicked; base is where the files are hosted
+	function bookmarklet(base) {
+		function load(src, done) {
+			var script = document.createElement("script");
+			script.src = src;
+			script.onload = done;
+			script.onerror = function () {
+				alert("Attack Helicopter could not load " + src + ". This site probably blocks outside scripts.");
+			};
+			document.body.appendChild(script);
+		}
+		if (window.invasion) {
+			window.invasion.addLaunchButton();
+			return;
+		}
+		load("https://code.jquery.com/jquery-3.7.1.min.js", function () {
+			var jq = window.jQuery;
+			load(base + "attackhelicopter.js", function () {
+				jq.noConflict(true);
+				window.invasion.addLaunchButton();
+			});
+		});
+	}
+
+	var baseInput = document.getElementById("base");
+	var link = document.getElementById("bookmarklet");
+	var codeBox = document.getElementById("code");
+
+	function updateBookmarklet() {
+		var base = baseInput.value.trim();
+		if (base && base.slice(-1) !== "/") {
+			base += "/";
+		}
+		var code = "javascript:" + encodeURIComponent("(" + bookmarklet.toString() + ")(" + JSON.stringify(base) + ");void 0");
+		link.href = code;
+		codeBox.value = code;
+	}
+
+	baseInput.value = new URL(".", location.href).href;
+	document.getElementById("file-warning").hidden = location.protocol !== "file:";
+	baseInput.addEventListener("input", updateBookmarklet);
+	updateBookmarklet();
+
+	link.addEventListener("click", function (event) {
+		event.preventDefault();
+		alert("Drag this button to your bookmarks bar instead of clicking it.");
+	});
+	document.getElementById("copy").addEventListener("click", function () {
+		codeBox.select();
+		navigator.clipboard.writeText(codeBox.value).catch(function () {
+			document.execCommand("copy");
+		});
+	});
+</script>
+</body>
+</html>
