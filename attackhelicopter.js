@@ -11,42 +11,62 @@ var invasion = (function () {
 	var baseUrl = scriptSrc.substring(0, scriptSrc.lastIndexOf("/") + 1);
 	var frameLines = [
 	[
-	"     ________________________________",
-	"  /                ||                ",
-	" x             _--/--\\___            ",
-	"/ \\\\-----_____|        \\_\\_          ",
-	"   `-----ARMY______________)== <--   ",
-	"                __/__\\___            "
+  "                                       ",
+	"      ________________________________ ",
+	"   /                ||                 ",
+	"  x             _--/--\\___             ",
+	" / \\\\-----_____|        \\_\\_           ",
+	"    `-----ARMY______________)== <--    ",
+	"                 __/__\\___             ",
+  "                                       "
 	],
 	[
-	"     ________________________________",
-	"  /                ||                ",
-	" x             _--/--\\___            ",
-	"/ \\\\-----_____|        \\_\\_          ",
-	"   `-----ARMY______________)==       ",
-	"                __/__\\___            "
+  "                                       ",
+	"      ________________________________ ",
+	"   /                ||                 ",
+	"  x             _--/--\\___             ",
+	" / \\\\-----_____|        \\_\\_           ",
+	"    `-----ARMY______________)==        ",
+	"                 __/__\\___             ",
+  "                                       "
 	],[
-	"       __________________________    ",
-	"                   ][                ",
-	"-+-            _--/--\\___            ",
-	"  \\\\-----_____|        \\_\\_          ",
-	"   `-----ARMY______________)==       ",
-	"                __/__\\___            "
+  "                                       ",
+	"        __________________________     ",
+	"                    ][                 ",
+	" -+-            _--/--\\___             ",
+	"   \\\\-----_____|        \\_\\_           ",
+	"    `-----ARMY______________)==        ",
+	"                 __/__\\___             ",
+  "                                       "
 	],[
-	"             ______________          ",
-	"\\                  ||                ",
-	" x             _--/--\\___            ",
-	"  \\\\-----_____|        \\_\\_          ",
-	"   `-----ARMY______________)==       ",
-	"                __/__\\___            "
+  "                                       ",
+	"              ______________           ",
+	" \\                  ||                 ",
+	"  x             _--/--\\___             ",
+	"   \\\\-----_____|        \\_\\_           ",
+	"    `-----ARMY______________)==        ",
+	"                 __/__\\___             ",
+  "                                       "
 	],[
-	"                   __                ",
-	"                   ][                ",
-	"-+-            _--/--\\___            ",
-	"  \\\\-----_____|        \\_\\_          ",
-	"   `-----ARMY______________)==       ",
-	"                __/__\\___            "
+  "                                       ",
+	"                    __                 ",
+	"                    ][                 ",
+	" -+-            _--/--\\___             ",
+	"   \\\\-----_____|        \\_\\_           ",
+	"    `-----ARMY______________)==        ",
+	"                 __/__\\___             ",
+  "                                       "
 	]
+	];
+	var maskLines = [
+  "                                       ",
+	" XXX  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+	"XXXXX XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+	"XXXXX          XXXXXXXXXXXX            ",
+	"XXXXXXXXXXXXXXXXXXXXXXXXXXXXX          ",
+	" XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX       ",
+	"    XXXXXXXXXXXXXXXXXXXXXXXXX          ",
+  "                XXXXXXXXXXX            ",
 	];
 	var boomLines = [
 	"  \\  |  /  ",
@@ -57,6 +77,8 @@ var invasion = (function () {
 	var css =
 		"pre." + heliID + "{margin:0;padding:0;border:0;background:rgba(255,255,255,.8);box-shadow:none;" +
 		"font:bold 12px/1.15 Menlo,Consolas,monospace;color:#1d2a12;white-space:pre;max-width:none;overflow:visible;}" +
+		"pre." + heliID + "." + heliID + "-masked{background:none;}" +
+		"pre." + heliID + " span." + heliID + "-solid{background:#ffffffcc;}" +
 		"div." + heliID + "-hover{animation:" + heliID + "-hover 1.5s ease-in-out infinite alternate;}" +
 		"@keyframes " + heliID + "-hover{from{transform:translateY(-4px)}to{transform:translateY(4px)}}";
 
@@ -101,6 +123,34 @@ var invasion = (function () {
 			delay: options.delay || 0,
 			easing: options.easing || swing,
 			fill: "backwards" // show the start state during the delay
+		});
+	}
+
+	// Fills `pre` with `lines`; characters under an X in `mask` get an opaque white background.
+	function drawMasked(pre, lines, mask) {
+		pre.classList.add(heliID + "-masked");
+		lines.forEach(function(line, r) {
+			if(r > 0) {
+				pre.appendChild(document.createTextNode("\n"));
+			}
+			var start = 0;
+			while(start < line.length) {
+				var filled = mask[r].charAt(start) == "X";
+				var end = start + 1;
+				while(end < line.length && (mask[r].charAt(end) == "X") == filled) {
+					end++;
+				}
+				var run = line.substring(start, end);
+				if(filled) {
+					var span = create("span", run);
+					span.classList.add(heliID + "-solid");
+					pre.appendChild(span);
+				}
+				else {
+					pre.appendChild(document.createTextNode(run));
+				}
+				start = end;
+			}
 		});
 	}
 
@@ -242,7 +292,8 @@ var invasion = (function () {
 
 			// create helicopter ascii art frames
 			for(var frame = 0; frame < frameLines.length; frame++) {
-				var pre = create("pre", frameLines[frame].join("\n"));
+				var pre = create("pre");
+				drawMasked(pre, frameLines[frame], maskLines);
 				pre.classList.add(heliID);
 				setHidden(pre, true);
 				self.frames.push(pre);
