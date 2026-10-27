@@ -24,12 +24,12 @@ Open `index.html` in a browser, or serve the folder:
 python3 -m http.server
 ```
 
-Then open <http://localhost:8000/> and press **Launch Attack Helicopter**. Turn the sound on. Press
-**Abort mission** to stop, and reload the page to undo the damage.
+Then open <http://localhost:8000/> and press **Launch Attack Helicopter**, as many times as you like.
+Turn the sound on. Press **Abort mission** to stop all helicopters, and reload the page to undo the damage.
 
 ## Use it on any website with the bookmarklet
 
-The bookmarklet adds a **Launch Attack Helicopter** button to whatever page you're on.
+The bookmarklet adds **Launch Attack Helicopter** and **Abort mission** buttons to whatever page you're on.
 
 1. Host the files from this repository at a public https URL (for example with GitHub Pages).
 2. Open `index.html` from that URL. The **Files hosted at** box fills in that URL automatically, and you
@@ -51,7 +51,8 @@ domains. The bookmarklet shows an alert when that happens.
 
 ```html
 <script src="attackhelicopter.js"></script>
-<button onclick="invasion.toggle()">Launch</button>
+<button onclick="invasion.launch()">Launch</button>
+<button onclick="invasion.abort()">Abort</button>
 ```
 
 Keep the mp3 files in the same folder as `attackhelicopter.js`. The script finds them from its own URL.
@@ -60,11 +61,12 @@ Start the helicopter from a click or key press. Browsers block sound that starts
 
 | Function | What it does |
 | --- | --- |
-| `invasion.launch()` | Start the attack. Does nothing if a helicopter is already flying. |
-| `invasion.abort()` | Stop the attack, silence the sounds and remove the helicopter. |
-| `invasion.toggle()` | Launch or abort. Returns `true` if the helicopter is now flying. |
-| `invasion.isRunning()` | Whether a helicopter is flying. |
-| `invasion.addLaunchButton()` | Add a floating Launch/Abort button in the bottom right corner. |
+| `invasion.launch()` | Launch one more helicopter and return it. |
+| `invasion.abort()` | Stop all helicopters, silence the sounds and remove them. |
+| `invasion.isRunning()` | Whether any helicopter is flying. |
+| `invasion.addLaunchButton()` | Add floating Launch and Abort buttons in the bottom right corner. |
+
+With more than one helicopter the page no longer scrolls along; they work on elements anywhere on the page.
 
 ### Protect elements
 

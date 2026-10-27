@@ -37,6 +37,7 @@
 		cursor: pointer;
 	}
 	.bevel:active { border-style: inset; }
+	.bevel:disabled { color: #808080; cursor: default; border-style: outset; }
 	a.bevel { display: inline-block; text-decoration: none; cursor: grab; }
 	.page { max-width: 960px; margin: 0 auto; padding: 4px 16px 40px; }
 	h1 { font-size: 28px; margin: 6px 0 2px; }
@@ -65,6 +66,7 @@
 	<span>
 		<a href="https://github.com/skipperkongen/htmlinvasion">Source on GitHub</a>
 		<button type="button" class="bevel" id="launch">Launch Attack Helicopter</button>
+		<button type="button" class="bevel" id="abort" disabled>Abort mission</button>
 	</span>
 </div>
 
@@ -158,9 +160,10 @@ __|______________|_||_|___________</pre>
 		<h3>Use it</h3>
 		<ol>
 			<li>Open any website and click the <b>Attack Helicopter</b> bookmark.</li>
-			<li>A <b>Launch Attack Helicopter</b> button appears in the bottom right corner.</li>
-			<li>Click it, turn up the volume, and watch the page get destroyed one element at a time.
-				Click <b>Abort mission</b> to call it off. Reload the page to undo the damage.</li>
+			<li>A <b>Launch Attack Helicopter</b> and an <b>Abort mission</b> button appear in the bottom right corner.</li>
+			<li>Click launch, turn up the volume, and watch the page get destroyed one element at a time.
+				Click it again for more helicopters (the page stops scrolling along once there are two or more).
+				Click <b>Abort mission</b> to call them all off. Reload the page to undo the damage.</li>
 		</ol>
 
 		<h3>Good to know</h3>
@@ -184,12 +187,16 @@ __|______________|_||_|___________</pre>
 
 <script src="attackhelicopter.js"></script>
 <script>
-	// demo page launch button
+	// demo page buttons
 	var launch = document.getElementById("launch");
-	var launchText = launch.innerHTML;
+	var abort = document.getElementById("abort");
 	launch.addEventListener("click", function () {
-		var flying = invasion.toggle();
-		launch.innerHTML = flying ? "Abort mission" : launchText;
+		invasion.launch();
+		abort.disabled = false;
+	});
+	abort.addEventListener("click", function () {
+		invasion.abort();
+		abort.disabled = true;
 	});
 
 	// runs on the visited page when the bookmark is clicked; base is where the files are hosted
