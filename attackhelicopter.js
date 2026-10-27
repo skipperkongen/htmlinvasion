@@ -1,4 +1,4 @@
-var invasion = (function ($) {
+var invasion = (function () {
 	var invasion = {};
 	var heliID = "attackhelicopter250375";
 	var ignoreClass = "invasion-ignore";
@@ -60,12 +60,58 @@ var invasion = (function ($) {
 		"div." + heliID + "-hover{animation:" + heliID + "-hover 1.5s ease-in-out infinite alternate;}" +
 		"@keyframes " + heliID + "-hover{from{transform:translateY(-4px)}to{transform:translateY(4px)}}";
 
+	// roughly jQuery's default "swing" easing
+	var swing = "cubic-bezier(0.37, 0, 0.63, 1)";
+
+	function create(tag, text) {
+		var element = document.createElement(tag);
+		if(text !== undefined) {
+			element.textContent = text;
+		}
+		return element;
+	}
+
+	function setHidden(element, hidden) {
+		element.style.display = hidden ? "none" : "";
+	}
+
+	// same test as jQuery's :visible, i.e. the element takes up layout space
+	function isVisible(element) {
+		return !!(element.offsetWidth || element.offsetHeight || element.getClientRects().length);
+	}
+
+	// bounding box in page coordinates
+	function pageRect(element) {
+		var rect = element.getBoundingClientRect();
+		return {left: rect.left + window.scrollX, top: rect.top + window.scrollY, width: rect.width, height: rect.height};
+	}
+
+	// Animates inline style properties (values must be CSS strings) from their computed values.
+	// The end state is set as inline style up front, so nothing needs to be committed afterwards.
+	// The element must be in the document. Returns the Animation; it fires no onfinish when cancelled.
+	function tween(element, props, options) {
+		var computed = getComputedStyle(element);
+		var from = {};
+		for(var name in props) {
+			from[name] = computed[name];
+		}
+		Object.assign(element.style, props);
+		return element.animate([from, props], {
+			duration: options.duration,
+			delay: options.delay || 0,
+			easing: options.easing || swing,
+			fill: "backwards" // show the start state during the delay
+		});
+	}
+
 	function topLayer(element) {
-		return element.addClass(heliID).css({
+		element.classList.add(heliID);
+		Object.assign(element.style, {
 			"position": "absolute",
 			"zIndex": 2147483647,
 			"pointerEvents": "none"
 		});
+		return element;
 	}
 
 	invasion.AttackHelicopter = function () {
@@ -92,7 +138,7 @@ var invasion = (function ($) {
 
 		self.step = function() {
 			// hide old frame
-			$(self.frames[self.current]).hide();
+			setHidden(self.frames[self.current], true);
 			self.current = (self.current + 1) % self.frames.length;
 			if(self.current == 0 && !self.shooting) {
 				self.current = 1; // skip the shooting frame
@@ -101,7 +147,7 @@ var invasion = (function ($) {
 				self.current = 2; // skip the first non-shooting frame
 			}
 			// show new frame
-			$(self.frames[self.current]).show();
+			setHidden(self.frames[self.current], false);
 		};
 
 		// play a sound and continue after a fixed time, even if the browser refuses to play it
@@ -135,69 +181,74 @@ var invasion = (function ($) {
 		};
 
 		self.gunPosition = function() {
-			var offset = self.container.offset();
+			var offset = pageRect(self.container);
 			return {
-				x: offset.left + self.container.outerWidth() * 0.86,
-				y: offset.top + self.container.outerHeight() * 0.75
+				x: offset.left + self.container.offsetWidth * 0.86,
+				y: offset.top + self.container.offsetHeight * 0.75
 			};
 		};
 
 		self.fireBullet = function(target) {
 			var gun = self.gunPosition();
 			var rect = target.rect;
-			var bullet = topLayer($("<span/>"))
-				.text("—")
-				.css({
-					"left": gun.x + "px",
-					"top": (gun.y - 8) + "px",
-					"font": "bold 14px monospace",
-					"color": "#c1121f"
-				});
-			$(document.documentElement).append(bullet);
-			bullet.animate({
-				"left": rect.left + Math.random() * Math.min(rect.width, 80),
-				"top": rect.top + Math.random() * rect.height - 8
-			}, 160, "linear", function() {
-				bullet.remove();
+			var bullet = topLayer(create("span", "—"));
+			Object.assign(bullet.style, {
+				"left": gun.x + "px",
+				"top": (gun.y - 8) + "px",
+				"font": "bold 14px monospace",
+				"color": "#c1121f"
 			});
+			document.documentElement.appendChild(bullet);
+			tween(bullet, {
+				"left": (rect.left + Math.random() * Math.min(rect.width, 80)) + "px",
+				"top": (rect.top + Math.random() * rect.height - 8) + "px"
+			}, {duration: 160, easing: "linear"}).onfinish = function() {
+				bullet.remove();
+			};
 		};
 
 		self.explode = function(target) {
 			var rect = target.rect;
-			var boom = topLayer($("<pre/>")).text(boomLines.join("\n")).css("color", "#c1121f");
-			$(document.documentElement).append(boom);
-			boom.css({
-				"left": (rect.left + Math.min(rect.width, 160) / 2 - boom.outerWidth() / 2) + "px",
-				"top": (rect.top + rect.height / 2 - boom.outerHeight() / 2) + "px"
+			var boom = topLayer(create("pre", boomLines.join("\n")));
+			boom.style.color = "#c1121f";
+			document.documentElement.appendChild(boom);
+			Object.assign(boom.style, {
+				"left": (rect.left + Math.min(rect.width, 160) / 2 - boom.offsetWidth / 2) + "px",
+				"top": (rect.top + rect.height / 2 - boom.offsetHeight / 2) + "px"
 			});
-			boom.delay(300).fadeOut(500, function() {
+			tween(boom, {"opacity": "0"}, {delay: 300, duration: 500}).onfinish = function() {
 				boom.remove();
-			});
+			};
 		};
 
 		self.init = function() {
-			if(!$("#" + heliID + "-style").length) {
-				$("<style/>").attr("id", heliID + "-style").text(css).appendTo("head");
+			if(!document.getElementById(heliID + "-style")) {
+				var style = create("style", css);
+				style.id = heliID + "-style";
+				document.head.appendChild(style);
 			}
 
 			// create helicopter container; it lives on <html> so it is positioned in page coordinates
 			// even when <body> is positioned
-			self.container = topLayer($("<div/>"))
-				.css({
-					"left": ($(window).scrollLeft() + 20) + "px",
-					"top": ($(window).scrollTop() + 80) + "px"
-				});
-			var hover = $("<div/>").addClass(heliID + "-hover");
-			self.container.append(hover);
-			$(document.documentElement).append(self.container);
+			self.container = topLayer(create("div"));
+			Object.assign(self.container.style, {
+				"left": (window.scrollX + 20) + "px",
+				"top": (window.scrollY + 80) + "px"
+			});
+			var hover = create("div");
+			hover.classList.add(heliID + "-hover");
+			self.container.appendChild(hover);
+			document.documentElement.appendChild(self.container);
 
 			// create helicopter ascii art frames
 			for(var frame = 0; frame < frameLines.length; frame++) {
-				var pre = $("<pre/>").addClass(heliID).text(frameLines[frame].join("\n")).hide();
+				var pre = create("pre", frameLines[frame].join("\n"));
+				pre.classList.add(heliID);
+				setHidden(pre, true);
 				self.frames.push(pre);
-				hover.append(pre);
+				hover.appendChild(pre);
 			}
-			$(self.frames[1]).show();
+			setHidden(self.frames[1], false);
 
 			// Schedule step function
 			self.timer = setInterval(self.step, 1000/fps);
@@ -208,31 +259,29 @@ var invasion = (function ($) {
 		self.acquireTarget = function() {
 			// select a random visible element without visible children; once all of an element's
 			// children are destroyed, the element itself becomes a target
-			var targets = $("body *")
-				.not("script, style, noscript, template, link, meta, br, svg *")
-				.filter(function() {
-					var element = $(this);
-					if(element.closest("." + heliID + ", ." + ignoreClass).length) {
-						return false;
-					}
-					if(!element.is(":visible") || element.css("visibility") == "hidden") {
-						return false;
-					}
-					if(this.tagName.toLowerCase() != "svg" && element.children(":visible").length) {
-						return false;
-					}
-					var rect = this.getBoundingClientRect();
-					return rect.width > 0 && rect.height > 0;
-				});
+			var targets = Array.prototype.filter.call(document.body.querySelectorAll("*"), function(element) {
+				if(element.matches("script, style, noscript, template, link, meta, br, svg *")) {
+					return false;
+				}
+				if(element.closest("." + heliID + ", ." + ignoreClass)) {
+					return false;
+				}
+				if(!isVisible(element) || getComputedStyle(element).visibility == "hidden") {
+					return false;
+				}
+				if(element.tagName.toLowerCase() != "svg" && Array.prototype.some.call(element.children, isVisible)) {
+					return false;
+				}
+				var rect = element.getBoundingClientRect();
+				return rect.width > 0 && rect.height > 0;
+			});
 			if(targets.length == 0) {
 				return null;
 			}
-			var element = $(targets[Math.floor(Math.random() * targets.length)]);
-			var offset = element.offset();
-			var size = element[0].getBoundingClientRect();
+			var element = targets[Math.floor(Math.random() * targets.length)];
 			return {
 				element: element,
-				rect: {left: offset.left, top: offset.top, width: size.width, height: size.height}
+				rect: pageRect(element)
 			};
 		};
 
@@ -248,12 +297,12 @@ var invasion = (function ($) {
 			}
 			var rect = target.rect;
 			// 2: move to target, so the gun is a short distance left of it
-			var gunOffsetX = self.container.outerWidth() * 0.86;
-			var gunOffsetY = self.container.outerHeight() * 0.75;
+			var gunOffsetX = self.container.offsetWidth * 0.86;
+			var gunOffsetY = self.container.offsetHeight * 0.75;
 			var left = Math.max(0, rect.left - gap - gunOffsetX);
 			var top = Math.max(0, rect.top + Math.min(rect.height, 200) / 2 - gunOffsetY);
 			// only scroll when the target isn't already on screen
-			var scrollTop = $(window).scrollTop();
+			var scrollTop = window.scrollY;
 			if(rect.top < scrollTop || rect.top + rect.height > scrollTop + window.innerHeight) {
 				window.scrollTo({top: Math.max(0, top - window.innerHeight / 3), behavior: "smooth"});
 			}
@@ -265,11 +314,11 @@ var invasion = (function ($) {
 						self.useGun(target, function() {
 							// 5: Remove target from DOM
 							self.explode(target);
-							target.element.fadeOut(function() {
-								$(this).remove();
+							tween(target.element, {"opacity": "0"}, {duration: 400}).onfinish = function() {
+								target.element.remove();
 								// 6: Call attack again on finished
 								self.attack();
-							});
+							};
 						});
 					});
 				});
@@ -279,29 +328,36 @@ var invasion = (function ($) {
 		self.moveTo = function(property, value, callback) {
 			var properties = {};
 			properties[property] = value + "px";
-			self.container.animate(properties, flightTime, function() {
+			tween(self.container, properties, {duration: flightTime}).onfinish = function() {
 				if(!self.stopped) {
 					callback();
 				}
-			});
+			};
 		};
 
 		self.victory = function() {
-			var banner = $("<pre/>").addClass(heliID).text("\n   *** MISSION ACCOMPLISHED ***").css("color", "#c1121f");
-			self.container.find("div").append(banner);
-			self.container.animate({
-				"left": ($(window).scrollLeft() + 40) + "px",
-				"top": ($(window).scrollTop() + 40) + "px"
-			}, 2000);
+			var banner = create("pre", "\n   *** MISSION ACCOMPLISHED ***");
+			banner.classList.add(heliID);
+			banner.style.color = "#c1121f";
+			self.container.querySelector("div").appendChild(banner);
+			tween(self.container, {
+				"left": (window.scrollX + 40) + "px",
+				"top": (window.scrollY + 40) + "px"
+			}, {duration: 2000});
 		};
 
 		self.stop = function() {
 			self.stopped = true;
 			clearInterval(self.timer);
-			$.each([self.guns, self.radio, self.wagner], function(i, audio) {
+			[self.guns, self.radio, self.wagner].forEach(function(audio) {
 				audio.pause();
 			});
-			$("." + heliID).stop(true).remove();
+			document.querySelectorAll("." + heliID).forEach(function(element) {
+				element.getAnimations().forEach(function(animation) {
+					animation.cancel();
+				});
+				element.remove();
+			});
 		};
 
 		self.init();
@@ -339,33 +395,33 @@ var invasion = (function ($) {
 	// a floating button, used by the bookmarklet to add a launch control to any page
 	invasion.addLaunchButton = function() {
 		var id = heliID + "-launch";
-		if($("#" + id).length) {
+		if(document.getElementById(id)) {
 			return;
 		}
 		var launchText = "🚁 Launch Attack Helicopter";
-		var button = $("<button type=\"button\"/>")
-			.attr("id", id)
-			.addClass(ignoreClass)
-			.text(launchText)
-			.css({
-				"position": "fixed",
-				"right": "16px",
-				"bottom": "16px",
-				"zIndex": 2147483647,
-				"padding": "10px 16px",
-				"border": "2px solid #1d2a12",
-				"borderRadius": "6px",
-				"background": "#4b5d2a",
-				"color": "#fff",
-				"font": "bold 14px/1.2 system-ui, sans-serif",
-				"cursor": "pointer",
-				"boxShadow": "0 4px 12px rgba(0,0,0,.3)"
-			})
-			.on("click", function() {
-				button.text(invasion.toggle() ? "Abort mission" : launchText);
-			});
-		$("body").append(button);
+		var button = create("button", launchText);
+		button.type = "button";
+		button.id = id;
+		button.classList.add(ignoreClass);
+		Object.assign(button.style, {
+			"position": "fixed",
+			"right": "16px",
+			"bottom": "16px",
+			"zIndex": 2147483647,
+			"padding": "10px 16px",
+			"border": "2px solid #1d2a12",
+			"borderRadius": "6px",
+			"background": "#4b5d2a",
+			"color": "#fff",
+			"font": "bold 14px/1.2 system-ui, sans-serif",
+			"cursor": "pointer",
+			"boxShadow": "0 4px 12px rgba(0,0,0,.3)"
+		});
+		button.addEventListener("click", function() {
+			button.textContent = invasion.toggle() ? "Abort mission" : launchText;
+		});
+		document.body.appendChild(button);
 	};
 
 	return invasion;
-}(jQuery));
+}());

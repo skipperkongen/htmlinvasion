@@ -165,8 +165,7 @@ __|______________|_||_|___________</pre>
 
 		<h3>Good to know</h3>
 		<ul>
-			<li>The bookmarklet loads <code>attackhelicopter.js</code> and the mp3 files from the URL above, plus
-				jQuery from <code>code.jquery.com</code>, without touching the page's own jQuery.</li>
+			<li>The bookmarklet loads <code>attackhelicopter.js</code> and the mp3 files from the URL above.</li>
 			<li>Some sites (GitHub, banks, many big web apps) have a Content Security Policy that blocks outside
 				scripts. The bookmarklet tells you when that happens; there's nothing to do but pick another site.</li>
 			<li>Nothing is changed for real: everything happens in your browser tab only.</li>
@@ -183,7 +182,6 @@ __|______________|_||_|___________</pre>
 
 </div>
 
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="attackhelicopter.js"></script>
 <script>
 	// demo page launch button
@@ -209,12 +207,8 @@ __|______________|_||_|___________</pre>
 			window.invasion.addLaunchButton();
 			return;
 		}
-		load("https://code.jquery.com/jquery-3.7.1.min.js", function () {
-			var jq = window.jQuery;
-			load(base + "attackhelicopter.js", function () {
-				jq.noConflict(true);
-				window.invasion.addLaunchButton();
-			});
+		load(base + "attackhelicopter.js", function () {
+			window.invasion.addLaunchButton();
 		});
 	}
 

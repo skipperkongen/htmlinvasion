@@ -40,8 +40,8 @@ The bookmarklet adds a **Launch Attack Helicopter** button to whatever page you'
 4. On any website, click the bookmark, then click the **Launch Attack Helicopter** button that appears in
    the bottom right corner.
 
-The bookmarklet loads `attackhelicopter.js` and the sound files from the hosted URL, and jQuery from
-`code.jquery.com`. It hands the page's own `$` and `jQuery` back afterwards, so the site keeps working.
+The bookmarklet loads `attackhelicopter.js` and the sound files from the hosted URL. The script has no
+dependencies and doesn't touch the page's own libraries, so the site keeps working.
 Everything happens in your browser tab only.
 
 Some sites, such as GitHub and most banks, have a Content Security Policy that blocks scripts from other
@@ -50,7 +50,6 @@ domains. The bookmarklet shows an alert when that happens.
 ## Add it to your own page
 
 ```html
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="attackhelicopter.js"></script>
 <button onclick="invasion.toggle()">Launch</button>
 ```
@@ -83,6 +82,6 @@ nothing is left, it flies to the top left corner and declares the mission accomp
 | File | Purpose |
 | --- | --- |
 | `index.html` | Demo page, bookmarklet and instructions |
-| `attackhelicopter.js` | The helicopter (requires jQuery) |
+| `attackhelicopter.js` | The helicopter (no dependencies) |
 | `gun.mp3`, `radio.mp3` | Sound effects |
 | `wagner_comp.mp3` | Soundtrack: Ride of the Valkyries by Richard Wagner |
